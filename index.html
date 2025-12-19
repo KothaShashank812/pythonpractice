@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wanderlust Explorer - Discover Amazing Destinations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        primary: '#0f6cff',
+                        accent: '#ff6b6b',
+                        navy: '#0f172a',
+                        'off-white': '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .gradient-bg {
+            background: linear-gradient(90deg, #0f6cff, #6a8cff);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(15, 108, 255, 0.8), rgba(106, 140, 255, 0.6));
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .map-container {
+            height: 500px;
+        }
+        @media (min-width: 768px) {
+            .map-container {
+                height: 600px;
+            }
+        }
+        .floating-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .destination-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
+        }
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="h-full bg-off-white font-inter">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="font-poppins font-bold text-xl text-navy">Wanderlust Explorer</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#destinations" class="text-gray-600 hover:text-primary transition-colors font-medium">Destinations</a>
+                    <a href="#trips" class="text-gray-600 hover:text-primary transition-colors font-medium">My Trips</a>
+                    <a href="#experiences" class="text-gray-600 hover:text-primary transition-colors font-medium">Experiences</a>
+                    <button class="gradient-bg text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity">
+                        Sign In
+                    </button>
+                </div>
+                <button class="md:hidden p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+             alt="Mountain landscape" 
+             class="absolute inset-0 w-full h-full object-cover"
+             onerror="this.src=''; this.alt='Beautiful mountain landscape'; this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.style.display='block';">
+        <div class="hero-gradient absolute inset-0"></div>
+        
+        <div class="relative h-full flex items-center justify-center text-center px-4">
+            <div class="max-w-5xl mx-auto">
+                <div class="mb-8">
+                    <svg class="w-20 h-20 mx-auto text-white mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h1 class="font-poppins font-bold text-4xl md:text-7xl text-white mb-6 leading-tight">
+                    Explore the World<br>
+                    <span class="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">Create Memories</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    Discover breathtaking destinations, plan unforgettable journeys, and connect with fellow travelers from around the globe
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="showPlannerModal()" class="bg-white text-primary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Plan Your Adventure
+                    </button>
+                    <button onclick="document.getElementById('destinations').scrollIntoView({behavior: 'smooth'})" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-primary transition-all">
+                        Explore Destinations
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="floating-card rounded-3xl shadow-2xl border border-gray-100 p-8 md:p-10 -mt-32 relative z-10">
+                <div class="text-center mb-8">
+                    <h2 class="font-poppins font-bold text-3xl text-navy mb-3">Plan Your Perfect Journey</h2>
+                    <p class="text-gray-600 text-lg">Discover amazing destinations and create your dream itinerary</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="relative">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">From</label>
+                        <div class="relative">
+                            <input type="text" id="fromInput" placeholder="Your current location" 
+                                   class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <label class="block text-sm font-semibold text-gray-700 mb-3">To</label>
+                        <div class="relative">
+                            <input type="text" id="toInput" placeholder="Dream destination" 
+                                   class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                                <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="planRoute()" class="w-full gradient-bg text-white py-4 px-8 rounded-xl font-bold text-lg hover:opacity-90 transition-all transform hover:-translate-y-1 shadow-lg">
+                            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Explore
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Destinations -->
+    <section id="destinations" class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="font-poppins font-bold text-4xl md:text-5xl text-navy mb-6">Trending Destinations</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Discover the world's most captivating places, from bustling cities to serene natural wonders</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Santorini, Greece -->
+                <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-xl cursor-pointer" onclick="selectDestination('santorini')">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" 
+                             alt="Santorini Greece" 
+                             class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+                             onerror="this.src=''; this.alt='Santorini Greece - Beautiful white buildings'; this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.style.display='block';">
+                        <div class="destination-overlay absolute inset-0"></div>
+                        <div class="absolute top-4 left-4">
+                            <div class="bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                                🇬🇷 Greece
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="font-poppins font-bold text-2xl mb-1">Santorini</h3>
+                            <p class="text-blue-100">Iconic sunsets & white architecture</p>
+                        </div>
+                        <div class="absolute bottom-4 right-4 text-white">
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                5-7 days ideal
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                Best: Apr-Oct
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4 leading-relaxed">Experience breathtaking sunsets, pristine beaches, and charming villages perched on volcanic cliffs</p>
+                        <div class="flex items-center justify-between">
+                            <div class="text-primary font-semibold">From $1,200</div>
+                            <div class="text-sm text-gray-500">per person</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tokyo, Japan -->
+                <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-xl cursor-pointer" onclick="selectDestination('tokyo')">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2094&q=80" 
+                             alt="Tokyo Japan" 
+                             class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+                             onerror="this.src=''; this.alt='Tokyo Japan - Modern city skyline'; this.style.background='linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'; this.style.display='block';">
+                        <div class="destination-overlay absolute inset-0"></div>
+                        <div class="absolute top-4 left-4">
+                            <div class="bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                                🇯🇵 Japan
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="font-poppins font-bold text-2xl mb-1">Tokyo</h3>
+                            <p class="text-blue-100">Modern metropolis meets tradition</p>
+                        </div>
+                        <div class="absolute bottom-4 right-4 text-white">
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                7-10 days ideal
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                Best: Mar-May, Sep-Nov
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4 leading-relaxed">Immerse yourself in cutting-edge technology, ancient temples, incredible cuisine, and vibrant culture</p>
+                        <div class="flex items-center justify-between">
+                            <div class="text-primary font-semibold">From $1,800</div>
+                            <div class="text-sm text-gray-500">per person</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bali, Indonesia -->
+                <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-xl cursor-pointer" onclick="selectDestination('bali')">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                             alt="Bali Indonesia" 
+                             class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+                             onerror="this.src=''; this.alt='Bali Indonesia - Tropical paradise'; this.style.background='linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'; this.style.display='block';">
+                        <div class="destination-overlay absolute inset-0"></div>
+                        <div class="absolute top-4 left-4">
+                            <div class="bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                                🇮🇩 Indonesia
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="font-poppins font-bold text-2xl mb-1">Bali</h3>
+                            <p class="text-blue-100">Tropical paradise & spiritual haven</p>
+                        </div>
+                        <div class="absolute bottom-4 right-4 text-white">
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                7-14 days ideal
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                Best: Apr-Oct
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4 leading-relaxed">Discover pristine beaches, ancient temples, lush rice terraces, and world-class wellness retreats</p>
+                        <div class="flex items-center justify-between">
+                            <div class="text-primary font-semibold">From $900</div>
+                            <div class="text-sm text-gray-500">per person</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paris, France -->
+                <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-xl cursor-pointer" onclick="selectDestination('paris')">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1502602898536-47ad22581b52?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80" 
+                             alt="Paris France" 
+                             class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+                             onerror="this.src=''; this.alt='Paris France - Eiffel Tower'; this.style.background='linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'; this.style.display='block';">
+                        <div class="destination-overlay absolute inset-0"></div>
+                        <div class="absolute top-4 left-4">
+                            <div class="bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                                🇫🇷 France
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="font-poppins font-bold text-2xl mb-1">Paris</h3>
+                            <p class="text-blue-100">City of Light & Romance</p>
+                        </div>
+                        <div class="absolute bottom-4 right-4 text-white">
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                4-7 days ideal
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                Best: Apr-Jun, Sep-Oct
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4 leading-relaxed">Experience world-class art, exquisite cuisine, iconic landmarks, and timeless elegance</p>
+                        <div class="flex items-center justify-between">
+                            <div class="text-primary font-semibold">From $1,500</div>
+                            <div class="text-sm text-gray-500">per person</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Machu Picchu, Peru -->
+                <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-xl cursor-pointer" onclick="selectDestination('machu-picchu')">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1587595431973-160d0d94add1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2076&q=80" 
+                             alt="Machu Picchu Peru" 
+                             class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+                             onerror="this.src=''; this.alt='Machu Picchu Peru - Ancient ruins'; this.style.background='linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)'; this.style.display='block';">
+                        <div class="destination-overlay absolute inset-0"></div>
+                        <div class="absolute top-4 left-4">
+                            <div class="bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                                🇵🇪 Peru
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="font-poppins font-bold text-2xl mb-1">Machu Picchu</h3>
+                            <p class="text-blue-100">Ancient wonder of the world</p>
+                        </div>
+                        <div class="absolute bottom-4 right-4 text-white">
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                5-8 days ideal
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                Best: May-Sep
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4 leading-relaxed">Trek through the Andes to discover this mystical Incan citadel and UNESCO World Heritage site</p>
+                        <div class="flex items-center justify-between">
+                            <div class="text-primary font-semibold">From $1,400</div>
+                            <div class="text-sm text-gray-500">per person</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dubai, UAE -->
+                <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-xl cursor-pointer" onclick="selectDestination('dubai')">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                             alt="Dubai UAE" 
+                             class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
+                             onerror="this.src=''; this.alt='Dubai UAE - Modern skyline'; this.style.background='linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'; this.style.display='block';">
+                        <div class="destination-overlay absolute inset-0"></div>
+                        <div class="absolute top-4 left-4">
+                            <div class="bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                                🇦🇪 UAE
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="font-poppins font-bold text-2xl mb-1">Dubai</h3>
+                            <p class="text-blue-100">Luxury & innovation hub</p>
+                        </div>
+                        <div class="absolute bottom-4 right-4 text-white">
+                            <div class="text-yellow-400">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                4-6 days ideal
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                Best: Nov-Mar
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-4 leading-relaxed">Experience futuristic architecture, luxury shopping, desert adventures, and world-class hospitality</p>
+                        <div class="flex items-center justify-between">
+                            <div class="text-primary font-semibold">From $1,600</div>
+                            <div class="text-sm text-gray-500">per person</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiences Section -->
+    <section id="experiences" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="font-poppins font-bold text-4xl md:text-5xl text-navy mb-6">Unique Experiences</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Create unforgettable memories with our curated collection of extraordinary adventures</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center group">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-poppins font-bold text-xl text-navy mb-3">Adventure Tours</h3>
+                    <p class="text-gray-600">Thrilling expeditions and outdoor adventures for adrenaline seekers</p>
+                </div>
+                <div class="text-center group">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-poppins font-bold text-xl text-navy mb-3">Cultural Immersion</h3>
+                    <p class="text-gray-600">Authentic local experiences and cultural exchanges with communities</p>
+                </div>
+                <div class="text-center group">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-poppins font-bold text-xl text-navy mb-3">Culinary Journeys</h3>
+                    <p class="text-gray-600">Taste the world through cooking classes and food tours</p>
+                </div>
+                <div class="text-center group">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-poppins font-bold text-xl text-navy mb-3">Wellness Retreats</h3>
+                    <p class="text-gray-600">Rejuvenate your mind and body in serene natural settings</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section id="mapSection" class="py-20 bg-white" style="display: none;">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+                <div class="p-8 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h2 class="font-poppins font-bold text-3xl text-navy mb-2">Your Dream Journey</h2>
+                            <p class="text-gray-600">Discover amazing places along your route</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-6">
+                            <div class="flex items-center space-x-2 bg-white rounded-lg px-4 py-2 shadow-sm">
+                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                                <div class="text-sm">
+                                    <span class="font-semibold text-gray-700">Distance:</span> 
+                                    <span id="routeDistance" class="text-primary font-bold">--</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2 bg-white rounded-lg px-4 py-2 shadow-sm">
+                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div class="text-sm">
+                                    <span class="font-semibold text-gray-700">Duration:</span> 
+                                    <span id="routeTime" class="text-accent font-bold">--</span>
+                                </div>
+                            </div>
+                            <button onclick="saveTrip()" class="gradient-bg text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all shadow-lg">
+                                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                                Save Journey
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col lg:flex-row">
+                    <div class="lg:w-2/3">
+                        <div id="map" class="map-container bg-gradient-to-br from-blue-100 via-green-100 to-yellow-100 relative">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center">
+                                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-poppins font-bold text-2xl text-navy mb-2">Interactive Journey Map</h3>
+                                    <p class="text-gray-600 font-medium">Your personalized travel route appears here</p>
+                                    <p class="text-sm text-gray-500 mt-2">Complete with attractions, restaurants, and hidden gems</p>
+                                </div>
+                            </div>
+                            <div class="absolute top-4 left-4 bg-white rounded-lg p-3 shadow-lg">
+                                <div class="flex items-center space-x-2 text-sm">
+                                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                    <span class="font-medium">Start</span>
+                                </div>
+                            </div>
+                            <div class="absolute bottom-4 right-4 bg-white rounded-lg p-3 shadow-lg">
+                                <div class="flex items-center space-x-2 text-sm">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                    <span class="font-medium">Destination</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:w-1/3 p-8 bg-gradient-to-b from-gray-50 to-white">
+                        <h3 class="font-poppins font-bold text-xl text-navy mb-6 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                            Journey Highlights
+                        </h3>
+                        <div id="routeDetails" class="space-y-4">
+                            <div class="text-center text-gray-500 py-12">
+                                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                                </svg>
+                                <p class="font-medium">Plan your journey to see highlights</p>
+                                <p class="text-sm mt-1">Discover attractions, restaurants, and more</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Saved Trips -->
+    <section id="trips" class="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="font-poppins font-bold text-4xl md:text-5xl text-navy mb-6">Your Travel Collection</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">Access your saved journeys and continue planning your next adventure</p>
+            </div>
+            <div id="savedTrips" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Saved trips will be populated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-20 bg-navy text-white parallax-bg" style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2074&q=80');">
+        <div class="absolute inset-0 bg-navy bg-opacity-80"></div>
+        <div class="relative max-w-4xl mx-auto px-4 text-center">
+            <h2 class="font-poppins font-bold text-4xl md:text-5xl mb-6">Never Miss an Adventure</h2>
+            <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Get exclusive travel deals, destination guides, and insider tips delivered to your inbox</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-4 rounded-xl text-gray-900 focus:ring-2 focus:ring-primary focus:outline-none">
+                <button class="bg-primary hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold transition-colors">
+                    Subscribe
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-navy text-white py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center">
+                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="font-poppins font-bold text-2xl">Wanderlust Explorer</span>
+                    </div>
+                    <p class="text-gray-300 text-lg leading-relaxed max-w-md">Discover the world's most beautiful destinations and create unforgettable memories. Your adventure starts here.</p>
+                </div>
+                <div>
+                    <h4 class="font-poppins font-semibold text-lg mb-6">Destinations</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors">Europe</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Asia</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Americas</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Africa</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Oceania</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-poppins font-semibold text-lg mb-6">Connect</h4>
+                    <div class="flex space-x-4 mb-6">
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <span class="text-lg">📘</span>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <span class="text-lg">📷</span>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-700 rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <span class="text-lg">🐦</span>
+                        </a>
+                    </div>
+                    <p class="text-gray-300 text-sm">Follow us for daily travel inspiration</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 Wanderlust Explorer. All rights reserved. Made with ❤️ for travelers worldwide.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Trip Planner Modal -->
+    <div id="plannerModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h3 class="font-poppins font-bold text-2xl text-navy">Plan Your Adventure</h3>
+                    <p class="text-gray-600 mt-1">Start your journey in seconds</p>
+                </div>
+                <button onclick="hidePlannerModal()" class="text-gray-400 hover:text-gray-600 p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Trip Name</label>
+                    <input type="text" id="tripName" placeholder="My Dream Adventure" 
+                           class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">From</label>
+                    <input type="text" id="modalFrom" placeholder="Your current location" 
+                           class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">To</label>
+                    <input type="text" id="modalTo" placeholder="Dream destination" 
+                           class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+                </div>
+                <button onclick="createTrip()" class="w-full gradient-bg text-white py-4 px-8 rounded-xl font-bold text-lg hover:opacity-90 transition-all shadow-lg">
+                    <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Create Adventure
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let savedTrips = JSON.parse(localStorage.getItem('wanderlustTrips') || '[]');
+
+        // Destination data
+        const destinations = {
+            'santorini': {
+                name: 'Santorini, Greece',
+                country: 'Greece',
+                description: 'Iconic sunsets, white-washed buildings, and volcanic beaches',
+                duration: '5-7 days',
+                bestTime: 'April-October',
+                price: 'From $1,200',
+                highlights: ['Oia Sunset', 'Red Beach', 'Akrotiri Archaeological Site', 'Wine Tasting']
+            },
+            'tokyo': {
+                name: 'Tokyo, Japan',
+                country: 'Japan',
+                description: 'Modern metropolis blending tradition with cutting-edge technology',
+                duration: '7-10 days',
+                bestTime: 'March-May, September-November',
+                price: 'From $1,800',
+                highlights: ['Senso-ji Temple', 'Shibuya Crossing', 'Tsukiji Fish Market', 'Mount Fuji Day Trip']
+            },
+            'bali': {
+                name: 'Bali, Indonesia',
+                country: 'Indonesia',
+                description: 'Tropical paradise with ancient temples and pristine beaches',
+                duration: '7-14 days',
+                bestTime: 'April-October',
+                price: 'From $900',
+                highlights: ['Ubud Rice Terraces', 'Tanah Lot Temple', 'Seminyak Beach', 'Mount Batur Sunrise']
+            },
+            'paris': {
+                name: 'Paris, France',
+                country: 'France',
+                description: 'City of Light with world-class art, cuisine, and romance',
+                duration: '4-7 days',
+                bestTime: 'April-June, September-October',
+                price: 'From $1,500',
+                highlights: ['Eiffel Tower', 'Louvre Museum', 'Notre-Dame Cathedral', 'Seine River Cruise']
+            },
+            'machu-picchu': {
+                name: 'Machu Picchu, Peru',
+                country: 'Peru',
+                description: 'Ancient Incan citadel high in the Andes Mountains',
+                duration: '5-8 days',
+                bestTime: 'May-September',
+                price: 'From $1,400',
+                highlights: ['Inca Trail Trek', 'Huayna Picchu', 'Sacred Valley', 'Cusco City Tour']
+            },
+            'dubai': {
+                name: 'Dubai, UAE',
+                country: 'UAE',
+                description: 'Futuristic city with luxury shopping and desert adventures',
+                duration: '4-6 days',
+                bestTime: 'November-March',
+                price: 'From $1,600',
+                highlights: ['Burj Khalifa', 'Dubai Mall', 'Desert Safari', 'Palm Jumeirah']
+            }
+        };
+
+        // Show planner modal
+        function showPlannerModal() {
+            document.getElementById('plannerModal').classList.remove('hidden');
+        }
+
+        // Hide planner modal
+        function hidePlannerModal() {
+            document.getElementById('plannerModal').classList.add('hidden');
+        }
+
+        // Plan route function
+        function planRoute() {
+            const from = document.getElementById('fromInput').value;
+            const to = document.getElementById('toInput').value;
+            
+            if (!from || !to) {
+                showNotification('Please enter both starting point and destination', 'warning');
+                return;
+            }
+
+            // Show map section
+            document.getElementById('mapSection').style.display = 'block';
+            document.getElementById('mapSection').scrollIntoView({ behavior: 'smooth' });
+            
+            // Update route details
+            updateRouteDetails(from, to);
+            showNotification('Journey planned successfully!', 'success');
+        }
+
+        // Select destination
+        function selectDestination(destinationId) {
+            const destination = destinations[destinationId];
+            if (destination) {
+                document.getElementById('fromInput').value = 'Your Location';
+                document.getElementById('toInput').value = destination.name;
+                planRoute();
+            }
+        }
+
+        // Update route details
+        function updateRouteDetails(from, to) {
+            // Generate realistic travel data based on destination
+            const travelData = generateTravelData(to);
+            
+            document.getElementById('routeDistance').textContent = travelData.distance;
+            document.getElementById('routeTime').textContent = travelData.duration;
+            
+            const routeDetails = document.getElementById('routeDetails');
+            routeDetails.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 border-2 border-gray-100 shadow-sm">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                        <div>
+                            <div class="font-semibold text-navy">${from}</div>
+                            <div class="text-sm text-gray-500">Starting Point</div>
+                        </div>
+                    </div>
+                    <div class="ml-8 border-l-2 border-dashed border-gray-300 pl-6 py-4">
+                        <div class="text-sm text-gray-600 font-medium mb-2">${travelData.description}</div>
+                        <div class="text-xs text-gray-500">Estimated travel time: ${travelData.duration}</div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                        <div>
+                            <div class="font-semibold text-navy">${to}</div>
+                            <div class="text-sm text-gray-500">Destination</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <h4 class="font-poppins font-semibold text-lg text-navy flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        </svg>
+                        Must-See Attractions
+                    </h4>
+                    
+                    ${travelData.attractions.map(attraction => `
+                        <div class="bg-white rounded-xl p-4 border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 ${attraction.gradient} rounded-xl flex items-center justify-center">
+                                    <span class="text-2xl">${attraction.icon}</span>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-semibold text-navy">${attraction.name}</div>
+                                    <div class="text-sm text-gray-500">${attraction.description}</div>
+                                    <div class="text-xs text-primary font-medium mt-1">⭐ ${attraction.rating} rating • ${attraction.duration}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Generate travel data based on destination
+        function generateTravelData(destination) {
+            const destinationKey = Object.keys(destinations).find(key => 
+                destinations[key].name.toLowerCase().includes(destination.toLowerCase())
+            );
+            
+            if (destinationKey) {
+                const dest = destinations[destinationKey];
+                return {
+                    distance: getRandomDistance(),
+                    duration: dest.duration,
+                    description: `Journey to ${dest.name} - ${dest.description}`,
+                    attractions: getDestinationAttractions(destinationKey)
+                };
+            }
+            
+            return {
+                distance: getRandomDistance(),
+                duration: '5-7 days',
+                description: `Scenic journey to ${destination} with amazing stops along the way`,
+                attractions: getGenericAttractions()
+            };
+        }
+
+        // Get destination-specific attractions
+        function getDestinationAttractions(destinationKey) {
+            const attractionData = {
+                'santorini': [
+                    { name: 'Oia Sunset Point', description: 'World-famous sunset views', icon: '🌅', rating: '4.9', duration: '2 hours', gradient: 'bg-gradient-to-br from-orange-400 to-pink-500' },
+                    { name: 'Red Beach', description: 'Unique volcanic red sand beach', icon: '🏖️', rating: '4.7', duration: '3 hours', gradient: 'bg-gradient-to-br from-red-400 to-orange-500' },
+                    { name: 'Akrotiri Ruins', description: 'Ancient Minoan archaeological site', icon: '🏛️', rating: '4.6', duration: '2 hours', gradient: 'bg-gradient-to-br from-gray-400 to-gray-600' }
+                ],
+                'tokyo': [
+                    { name: 'Senso-ji Temple', description: 'Tokyo\'s oldest Buddhist temple', icon: '⛩️', rating: '4.8', duration: '2 hours', gradient: 'bg-gradient-to-br from-red-500 to-orange-600' },
+                    { name: 'Shibuya Crossing', description: 'World\'s busiest pedestrian crossing', icon: '🚶', rating: '4.7', duration: '1 hour', gradient: 'bg-gradient-to-br from-blue-500 to-purple-600' },
+                    { name: 'Tsukiji Fish Market', description: 'Famous fish market and sushi', icon: '🍣', rating: '4.9', duration: '3 hours', gradient: 'bg-gradient-to-br from-green-400 to-blue-500' }
+                ],
+                'bali': [
+                    { name: 'Ubud Rice Terraces', description: 'Stunning terraced rice fields', icon: '🌾', rating: '4.8', duration: '3 hours', gradient: 'bg-gradient-to-br from-green-400 to-emerald-500' },
+                    { name: 'Tanah Lot Temple', description: 'Iconic temple on a rock formation', icon: '🏛️', rating: '4.7', duration: '2 hours', gradient: 'bg-gradient-to-br from-blue-400 to-teal-500' },
+                    { name: 'Mount Batur Sunrise', description: 'Volcanic sunrise trekking', icon: '🌋', rating: '4.9', duration: '6 hours', gradient: 'bg-gradient-to-br from-orange-400 to-red-500' }
+                ],
+                'paris': [
+                    { name: 'Eiffel Tower', description: 'Iconic iron lattice tower', icon: '🗼', rating: '4.8', duration: '2 hours', gradient: 'bg-gradient-to-br from-gray-400 to-gray-600' },
+                    { name: 'Louvre Museum', description: 'World\'s largest art museum', icon: '🎨', rating: '4.9', duration: '4 hours', gradient: 'bg-gradient-to-br from-purple-400 to-pink-500' },
+                    { name: 'Seine River Cruise', description: 'Romantic boat tour of Paris', icon: '🚢', rating: '4.7', duration: '1.5 hours', gradient: 'bg-gradient-to-br from-blue-400 to-cyan-500' }
+                ],
+                'machu-picchu': [
+                    { name: 'Inca Trail', description: 'Ancient hiking trail to Machu Picchu', icon: '🥾', rating: '4.9', duration: '4 days', gradient: 'bg-gradient-to-br from-green-500 to-emerald-600' },
+                    { name: 'Huayna Picchu', description: 'Mountain peak with panoramic views', icon: '⛰️', rating: '4.8', duration: '3 hours', gradient: 'bg-gradient-to-br from-gray-500 to-slate-600' },
+                    { name: 'Sacred Valley', description: 'Valley of ancient Incan sites', icon: '🏔️', rating: '4.7', duration: '1 day', gradient: 'bg-gradient-to-br from-blue-400 to-green-500' }
+                ],
+                'dubai': [
+                    { name: 'Burj Khalifa', description: 'World\'s tallest building', icon: '🏢', rating: '4.8', duration: '2 hours', gradient: 'bg-gradient-to-br from-blue-500 to-purple-600' },
+                    { name: 'Desert Safari', description: 'Thrilling desert adventure', icon: '🐪', rating: '4.9', duration: '6 hours', gradient: 'bg-gradient-to-br from-yellow-400 to-orange-500' },
+                    { name: 'Dubai Mall', description: 'Luxury shopping and entertainment', icon: '🛍️', rating: '4.7', duration: '4 hours', gradient: 'bg-gradient-to-br from-pink-400 to-purple-500' }
+                ]
+            };
+            
+            return attractionData[destinationKey] || getGenericAttractions();
+        }
+
+        // Get generic attractions for unknown destinations
+        function getGenericAttractions() {
+            return [
+                { name: 'Historic Landmark', description: 'Cultural site with rich history', icon: '🏛️', rating: '4.7', duration: '2 hours', gradient: 'bg-gradient-to-br from-gray-400 to-gray-600' },
+                { name: 'Local Market', description: 'Authentic local shopping experience', icon: '🛒', rating: '4.6', duration: '2 hours', gradient: 'bg-gradient-to-br from-green-400 to-emerald-500' },
+                { name: 'Scenic Viewpoint', description: 'Breathtaking panoramic views', icon: '🌄', rating: '4.8', duration: '1 hour', gradient: 'bg-gradient-to-br from-blue-400 to-purple-500' }
+            ];
+        }
+
+        // Generate random distance
+        function getRandomDistance() {
+            const distances = ['1,245 km', '2,890 km', '567 km', '3,456 km', '890 km', '1,678 km'];
+            return distances[Math.floor(Math.random() * distances.length)];
+        }
+
+        // Create trip from modal
+        function createTrip() {
+            const name = document.getElementById('tripName').value;
+            const from = document.getElementById('modalFrom').value;
+            const to = document.getElementById('modalTo').value;
+            
+            if (!name || !from || !to) {
+                showNotification('Please fill in all fields', 'warning');
+                return;
+            }
+            
+            // Copy to main form
+            document.getElementById('fromInput').value = from;
+            document.getElementById('toInput').value = to;
+            
+            hidePlannerModal();
+            planRoute();
+        }
+
+        // Save trip
+        function saveTrip() {
+            const from = document.getElementById('fromInput').value;
+            const to = document.getElementById('toInput').value;
+            
+            if (!from || !to) {
+                showNotification('Please plan a journey first', 'warning');
+                return;
+            }
+            
+            const travelData = generateTravelData(to);
+            const trip = {
+                id: Date.now(),
+                name: `${from} to ${to}`,
+                from: from,
+                to: to,
+                distance: travelData.distance,
+                duration: travelData.duration,
+                created: new Date().toLocaleDateString(),
+                image: getTripImage(to)
+            };
+            
+            savedTrips.push(trip);
+            localStorage.setItem('wanderlustTrips', JSON.stringify(savedTrips));
+            
+            showNotification('Journey saved successfully!', 'success');
+            displaySavedTrips();
+        }
+
+        // Get trip image based on destination
+        function getTripImage(destination) {
+            const imageMap = {
+                'santorini': 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                'tokyo': 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                'bali': 'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                'paris': 'https://images.unsplash.com/photo-1502602898536-47ad22581b52?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                'machu picchu': 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                'dubai': 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
+            };
+            
+            const key = Object.keys(imageMap).find(k => destination.toLowerCase().includes(k));
+            return key ? imageMap[key] : 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
+        }
+
+        // Display saved trips
+        function displaySavedTrips() {
+            const container = document.getElementById('savedTrips');
+            
+            // Always show sample trips for demonstration
+            const sampleTrips = [
+                {
+                    id: 1,
+                    name: "Paris Adventure",
+                    from: "New York",
+                    to: "Paris, France",
+                    distance: "5,837 km",
+                    duration: "4-7 days",
+                    created: "Dec 15, 2024",
+                    image: "https://images.unsplash.com/photo-1502602898536-47ad22581b52?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                },
+                {
+                    id: 2,
+                    name: "Tokyo Explorer",
+                    from: "Los Angeles",
+                    to: "Tokyo, Japan",
+                    distance: "8,816 km",
+                    duration: "7-10 days",
+                    created: "Dec 10, 2024",
+                    image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                },
+                {
+                    id: 3,
+                    name: "Bali Getaway",
+                    from: "Sydney",
+                    to: "Bali, Indonesia",
+                    distance: "5,760 km",
+                    duration: "7-14 days",
+                    created: "Dec 5, 2024",
+                    image: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                }
+            ];
+            
+            const tripsToShow = savedTrips.length > 0 ? savedTrips : sampleTrips;
+            
+            if (tripsToShow.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 col-span-full">
+                        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
+                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                            </svg>
+                        </div>
+                        <h3 class="font-poppins font-bold text-2xl text-navy mb-3">No adventures saved yet</h3>
+                        <p class="text-gray-600 mb-8 text-lg">Start planning your dream journey and create memories that last forever!</p>
+                        <button onclick="showPlannerModal()" class="gradient-bg text-white px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 transition-all shadow-lg">
+                            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Plan Your First Adventure
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = tripsToShow.map(trip => `
+                <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-xl">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="${trip.image}" 
+                             alt="${trip.to}" 
+                             class="w-full h-full object-cover"
+                             onerror="this.src=''; this.alt='${trip.to} - Beautiful destination'; this.style.background='linear-gradient(135deg, #667eea 0%, #764ba2 100%)'; this.style.display='block';">
+                        <div class="destination-overlay absolute inset-0"></div>
+                        <div class="absolute top-4 left-4">
+                            <div class="bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-semibold text-gray-800">
+                                📅 ${trip.created}
+                            </div>
+                        </div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="font-poppins font-bold text-xl mb-1">${trip.name}</h3>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-600 mb-4">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            </svg>
+                            <span class="text-sm">${trip.from} → ${trip.to}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm text-gray-500 mb-6">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                </svg>
+                                ${trip.distance}
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ${trip.duration}
+                            </div>
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="loadTrip(${trip.id})" class="flex-1 gradient-bg text-white py-3 px-4 rounded-xl font-semibold hover:opacity-90 transition-all">
+                                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Explore
+                            </button>
+                            <button onclick="deleteTrip(${trip.id})" class="px-4 py-3 border-2 border-gray-200 rounded-xl hover:bg-red-50 hover:border-red-200 transition-all">
+                                <svg class="w-4 h-4 text-gray-500 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load trip
+        function loadTrip(tripId) {
+            const trip = savedTrips.find(t => t.id === tripId);
+            if (trip) {
+                document.getElementById('fromInput').value = trip.from;
+                document.getElementById('toInput').value = trip.to;
+                planRoute();
+            }
+        }
+
+        // Delete trip with inline confirmation
+        function deleteTrip(tripId) {
+            const tripElement = event.target.closest('.card-hover');
+            const originalContent = tripElement.innerHTML;
+            
+            // Show inline confirmation
+            tripElement.innerHTML = `
+                <div class="p-8 text-center">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                    <h3 class="font-poppins font-bold text-lg text-navy mb-2">Delete this adventure?</h3>
+                    <p class="text-gray-600 mb-6">This action cannot be undone</p>
+                    <div class="flex space-x-3">
+                        <button onclick="confirmDelete(${tripId})" class="flex-1 bg-red-500 text-white py-3 px-4 rounded-xl font-semibold hover:bg-red-600 transition-colors">
+                            Yes, Delete
+                        </button>
+                        <button onclick="cancelDelete()" class="flex-1 border-2 border-gray-200 py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Confirm delete
+        function confirmDelete(tripId) {
+            savedTrips = savedTrips.filter(t => t.id !== tripId);
+            localStorage.setItem('wanderlustTrips', JSON.stringify(savedTrips));
+            displaySavedTrips();
+            showNotification('Adventure deleted successfully', 'success');
+        }
+
+        // Cancel delete
+        function cancelDelete() {
+            displaySavedTrips(); // Refresh the display
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-green-500',
+                warning: 'bg-yellow-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+            
+            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Slide in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Slide out and remove
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            displaySavedTrips();
+            
+            // Add enter key support for search inputs
+            document.getElementById('fromInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') planRoute();
+            });
+            
+            document.getElementById('toInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') planRoute();
+            });
+            
+            // Add enter key support for modal inputs
+            document.getElementById('modalFrom').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') createTrip();
+            });
+            
+            document.getElementById('modalTo').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') createTrip();
+            });
+            
+            document.getElementById('tripName').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') createTrip();
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ee5401952e9f43',t:'MTc2MDUyMDk0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
